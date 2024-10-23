@@ -2319,6 +2319,7 @@ class Perlmutter(NerscMachine):
         if 'gpu' in job.constraint:
             gpus_per_task = int(floor(float(self.gpus_per_node)/job.processes_per_node))
             c+='#SBATCH --gpus-per-task={0}\n'.format(gpus_per_task)
+	    c+='#SBATCH --gpu_bind=map_gpu:0,1,2,3'
         #end if
 
         if job.user_env:
@@ -2339,6 +2340,9 @@ export OMP_PLACES=threads
         if 'gpu' in job.constraint:
             c+='''
 export SLURM_CPU_BIND="cores"
+export OMP_NUM_THREADS=1
+
+module load cpe/23.03
 '''
         #end if
         return c
